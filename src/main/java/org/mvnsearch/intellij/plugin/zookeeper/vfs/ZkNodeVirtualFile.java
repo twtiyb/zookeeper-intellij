@@ -18,6 +18,7 @@ import org.mvnsearch.intellij.plugin.zookeeper.ui.ZkNode;
 import java.io.*;
 import java.nio.charset.Charset;
 import java.util.List;
+import java.util.Optional;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
@@ -143,20 +144,19 @@ public class ZkNodeVirtualFile extends VirtualFile {
     }
 
     public void checkContent() {
+        ZkNode zkNode = new ZkNode("", "");
+        zkNode.setStat(stat);
+
         if (content == null) {
             try {
-                ZkNode zkNode = new ZkNode("", "");
-                zkNode.setStat(stat);
-                this.content = ByteUtils.concatenate(("stat:\n-----------\n" + zkNode.getTooltip() + "\n\n\n\ncontent\n--------------").getBytes(), getCurator().getData().storingStatIn(stat).forPath(filePath));
+                this.content = getCurator().getData().storingStatIn(stat).forPath(filePath);
                 if (isSingleFileZip()) {
                     this.content = unzip(content);
                 }
             } catch (Exception ignore) {
 
             }
-            if (this.content == null) {
-                content = "".getBytes();
-            }
+            this.content = ByteUtils.concatenate(("stat:\n-----------\n" + zkNode.getTooltip() + "\n\n\n\ncontent\n--------------").getBytes(), Optional.ofNullable(this.content).orElse("".getBytes()));
         }
     }
 
