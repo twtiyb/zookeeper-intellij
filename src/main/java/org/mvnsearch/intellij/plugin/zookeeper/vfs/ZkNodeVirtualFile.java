@@ -10,8 +10,10 @@ import com.intellij.openapi.vfs.VirtualFileSystem;
 import com.intellij.util.LocalTimeCounter;
 import org.apache.curator.framework.CuratorFramework;
 import org.apache.zookeeper.data.Stat;
+import org.bouncycastle.pqc.math.linearalgebra.ByteUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mvnsearch.intellij.plugin.zookeeper.ui.ZkNode;
 
 import java.io.*;
 import java.nio.charset.Charset;
@@ -143,7 +145,9 @@ public class ZkNodeVirtualFile extends VirtualFile {
     public void checkContent() {
         if (content == null) {
             try {
-                this.content = getCurator().getData().storingStatIn(stat).forPath(filePath);
+                ZkNode zkNode = new ZkNode("", "");
+                zkNode.setStat(stat);
+                this.content = ByteUtils.concatenate(("stat:\n-----------\n" + zkNode.getTooltip() + "\n\n\n\ncontent\n--------------").getBytes(), getCurator().getData().storingStatIn(stat).forPath(filePath));
                 if (isSingleFileZip()) {
                     this.content = unzip(content);
                 }

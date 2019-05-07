@@ -1,10 +1,9 @@
 package org.mvnsearch.intellij.plugin.zookeeper.ui;
 
-import com.intellij.openapi.fileTypes.FileTypes;
+import org.apache.commons.lang3.time.DateFormatUtils;
 import org.apache.zookeeper.data.Stat;
 
 import java.util.Arrays;
-import java.util.Date;
 
 /**
  * ZooKeeper Node
@@ -99,9 +98,9 @@ public class ZkNode {
 
     public String getTooltip() {
         return "cZxid = " + stat.getCzxid() + "\n" +
-                "ctime = " + new Date(stat.getCtime()) + "\n" +
+                "ctime = " + DateFormatUtils.ISO_DATETIME_FORMAT.format(stat.getCtime()) + "\n" +
                 "mZxid = " + stat.getMzxid() + "\n" +
-                "mtime = " + new Date(stat.getMtime()) + "\n" +
+                "mtime = " + DateFormatUtils.ISO_DATETIME_FORMAT.format(stat.getMtime()) + "\n" +
                 "pZxid = " + stat.getPzxid() + "\n" +
                 "cversion = " + stat.getCversion() + "\n" +
                 "dataVersion = " + stat.getVersion() + "\n" +

@@ -102,7 +102,7 @@ public class ZkTreeModel implements TreeModel {
                     return s.compareTo(s2);
                 }
             });
-            for (int i = 0; i < nodes.size() && i < 100; i++) {
+            for (int i = 0; i < nodes.size(); i++) {
                 ZkNode zkNode = new ZkNode(node.getFilePath(), nodes.get(i));
                 if (isWhitePath(zkNode.getFilePath())) {
                     children.add(zkNode);
